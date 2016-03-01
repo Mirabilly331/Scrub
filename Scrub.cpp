@@ -102,8 +102,17 @@ int main(int argc, char* argv[])
    
             {
                 cout << LogMessage(LogMessage::LogLevel::LOG_INFO, "Reading Time=" , reading_time_span.count()).str() << endl;; 
-                cout << LogMessage(LogMessage::LogLevel::LOG_INFO, "Writing Time=" , reading_time_span.count()).str() << endl;; 
-                cout << LogMessage(LogMessage::LogLevel::LOG_INFO, "Processing Time=" , reading_time_span.count()).str() << endl;; 
+                cout << LogMessage(LogMessage::LogLevel::LOG_INFO, "Writing Time=" , writing_time_span.count()).str() << endl;; 
+                cout << LogMessage(LogMessage::LogLevel::LOG_INFO, "Processing Time=" , processing_time_span.count()).str() << endl;; 
+            }
+
+            double send_data[3] = {reading_time_span.count(), writing_time_span.count(), processing_time_span.count()};
+            double recv_data[3];
+            MPI_Reduce(send_data, recv_data, 3, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+            if(tid == 0) {
+                cout << LogMessage(LogMessage::LogLevel::LOG_INFO, "Total Reading Time=" , recv_data[0]).str() << endl;
+                cout << LogMessage(LogMessage::LogLevel::LOG_INFO, "Total Writing Time=" , recv_data[1]).str() << endl;
+                cout << LogMessage(LogMessage::LogLevel::LOG_INFO, "Total Processing Time=" , recv_data[2]).str() << endl;
             }
      
             delete [] inbuffer;
