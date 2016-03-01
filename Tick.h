@@ -90,6 +90,8 @@ public:
 
     Tick(char* data);
 
+    Tick() : _price(0.0), _volume(0), _tickstate(TickState::TICK_VALID), _data(nullptr) {  };
+
     BTime get_timestamp() const;
     void   set_timestamp(const BTime ts);
 
